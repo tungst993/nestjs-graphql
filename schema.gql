@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Lesson {
+type lesson {
   id: ID!
   name: String!
   startDate: String!
@@ -10,9 +10,10 @@ type Lesson {
 }
 
 type Query {
-  lesson: Lesson!
+  lessons: [lesson!]!
+  lesson(id: String!): lesson!
 }
 
 type Mutation {
-  createLesson(name: String!, startDate: String!, endDate: String!): Lesson!
+  createLesson(name: String!, startDate: String!, endDate: String!): lesson!
 }
