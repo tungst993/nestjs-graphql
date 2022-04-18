@@ -11,6 +11,14 @@ export class AuthResolver {
     @Args('username') username: string,
     @Args('password') password: string,
   ) {
-    return this.authService.signUp12(username, password);
+    return this.authService.signUp(username, password);
+  }
+
+  @Mutation()
+  signIn(
+    @Args('username') username: string,
+    @Args('password') password: string,
+  ) {
+    return this.authService.signIn(username, password);
   }
 }
