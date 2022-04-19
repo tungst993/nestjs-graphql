@@ -10,6 +10,7 @@ import { User } from './user.entity';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { AuthCredentialsDto } from './dto/auth-credencials.dto';
 
 @Injectable()
 export class AuthService {
@@ -26,14 +27,11 @@ export class AuthService {
       id: uuid(),
       username,
       password: hashedPassword,
-      accessToken: null,
     });
 
     try {
       return await this.userRepository.save(user);
     } catch (error) {
-      console.log(error);
-
       if (error.code === '23505') {
         throw new ConflictException('Username already axists');
       } else {
@@ -42,14 +40,16 @@ export class AuthService {
     }
   }
 
-  async signIn(username: string, password: string): Promise<User> {
+  async signIn(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ accessToken: string }> {
+    const { username, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({ where: { username } });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { username };
-      const accessToken = await this.jwtService.sign(payload);
-      user.accessToken = accessToken;
-      return user;
+      const accessToken = this.jwtService.sign(payload);
+      return { accessToken };
     } else {
       throw new UnauthorizedException('Login fail');
     }

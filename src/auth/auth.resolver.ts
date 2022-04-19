@@ -1,8 +1,9 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
+import { JwtType } from './jwt.type';
 import { UserType } from './user.type';
 
-@Resolver((of) => UserType)
+@Resolver(() => UserType)
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
@@ -14,11 +15,11 @@ export class AuthResolver {
     return this.authService.signUp(username, password);
   }
 
-  @Mutation(() => UserType)
+  @Mutation(() => JwtType)
   signIn(
     @Args('username') username: string,
     @Args('password') password: string,
   ) {
-    return this.authService.signIn(username, password);
+    return this.authService.signIn({ username, password });
   }
 }
