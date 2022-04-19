@@ -13,6 +13,7 @@ type user {
   id: ID!
   username: String!
   password: String!
+  accessToken: String!
 }
 
 type Query {
@@ -23,4 +24,5 @@ type Query {
 type Mutation {
   createLesson(name: String!, startDate: String!, endDate: String!): lesson!
   signUp(username: String!, password: String!): user!
+  signIn(username: String!, password: String!): user!
 }

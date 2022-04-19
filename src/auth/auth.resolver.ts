@@ -6,7 +6,7 @@ import { UserType } from './user.type';
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
-  @Mutation((returns) => UserType)
+  @Mutation(() => UserType)
   signUp(
     @Args('username') username: string,
     @Args('password') password: string,
@@ -14,7 +14,7 @@ export class AuthResolver {
     return this.authService.signUp(username, password);
   }
 
-  @Mutation()
+  @Mutation(() => UserType)
   signIn(
     @Args('username') username: string,
     @Args('password') password: string,

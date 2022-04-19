@@ -26,11 +26,14 @@ export class AuthService {
       id: uuid(),
       username,
       password: hashedPassword,
+      accessToken: null,
     });
 
     try {
       return await this.userRepository.save(user);
     } catch (error) {
+      console.log(error);
+
       if (error.code === '23505') {
         throw new ConflictException('Username already axists');
       } else {
@@ -39,15 +42,14 @@ export class AuthService {
     }
   }
 
-  async signIn(username: string, password: string): Promise<string> {
+  async signIn(username: string, password: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { username } });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { username };
       const accessToken = await this.jwtService.sign(payload);
-      console.log(accessToken);
-
-      return accessToken;
+      user.accessToken = accessToken;
+      return user;
     } else {
       throw new UnauthorizedException('Login fail');
     }

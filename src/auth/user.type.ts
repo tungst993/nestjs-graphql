@@ -10,4 +10,7 @@ export class UserType {
 
   @Field()
   password: string;
+
+  @Field()
+  accessToken: string;
 }
