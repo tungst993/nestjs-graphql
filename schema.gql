@@ -22,6 +22,7 @@ type user {
 type Query {
   lessons: [lesson!]!
   lesson(id: String!): lesson!
+  test: [user!]!
 }
 
 type Mutation {

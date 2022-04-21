@@ -54,4 +54,8 @@ export class AuthService {
       throw new UnauthorizedException('Login fail');
     }
   }
+
+  async test(): Promise<User[]> {
+    return this.userRepository.find();
+  }
 }
