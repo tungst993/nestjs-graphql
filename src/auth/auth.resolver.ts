@@ -1,9 +1,22 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { ExecutionContext, Injectable, UseGuards } from '@nestjs/common';
+import {
+  GqlExecutionContext,
+  Args,
+  Mutation,
+  Resolver,
+  Query,
+} from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtType } from './jwt.type';
 import { UserType } from './user.type';
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    return ctx.getContext().req;
+  }
+}
 
 @Resolver(() => UserType)
 export class AuthResolver {
@@ -26,7 +39,7 @@ export class AuthResolver {
   }
 
   @Query(() => [UserType])
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(JwtAuthGuard)
   test() {
     return this.authService.test();
   }
